@@ -28,20 +28,14 @@ async function sendMessage() {
     if (!question) return;
 
     try {
-        // Set processing flag
         isProcessing = true;
-        
-        // Disable input and show loading state
         input.disabled = true;
         
-        // Add user message
         appendMessage('user', question);
         input.value = '';
         
-        // Show loading indicator
         const loadingId = showLoading();
 
-        // Send request to server
         const response = await fetch('/ask', {
             method: 'POST',
             headers: {
@@ -50,23 +44,20 @@ async function sendMessage() {
             body: JSON.stringify({ question: question }),
         });
 
-        // Remove loading indicator
         hideLoading(loadingId);
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
 
         const data = await response.json();
         
-        // Add assistant message
+        if (!response.ok) {
+            throw new Error(data.error || 'Server error');
+        }
+
         appendMessage('assistant', data.response);
 
     } catch (error) {
         console.error('Error:', error);
-        appendMessage('assistant', 'Sorry, there was an error processing your request.');
+        appendMessage('assistant', `Error: ${error.message}`);
     } finally {
-        // Reset processing flag and input state
         isProcessing = false;
         input.disabled = false;
         input.focus();
