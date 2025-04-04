@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="gl-container">
+    <h1>Green Lead</h1>
+    
+    <div class="gl-header">
+        <img src="{{ url_for('static', filename='images.png') }}" alt="Green Lead Logo" class="gl-logo">
+        <p class="gl-intro">Green Lead is a social organization dedicated to environment, climate change and green leadership development. It's a govt. registered non-profit organization based in Bangladesh.</p>
+    </div>
+
+    <div class="website-link">
+        <a href="https://greenleadglobal.org/" target="_blank" class="gl-button">Visit Green Lead Website</a>
+    </div>
+
+    <div class="mission-section">
+        <h2>Our Mission</h2>
+        <p>We provide climate action roadmaps and digital tools to help you take local climate action. We support you in starting the chain of climate action and building resilience for the climate change impact.</p>
+    </div>
+
+    <div class="projects-section">
+        <h2>Our Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <h3>Re-Energize Bangladesh</h3>
+                <p>Description of Re-Energize Bangladesh project</p>
+            </div>
+            <div class="project-card">
+                <h3>UnPlastic Bangladesh</h3>
+                <p>Description of UnPlastic Bangladesh project</p>
+            </div>
+            <div class="project-card">
+                <h3>CLAN</h3>
+                <p>Description of CLAN project</p>
+            </div>
+            <div class="project-card">
+                <h3>ClimateED</h3>
+                <p>Description of ClimateED project</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

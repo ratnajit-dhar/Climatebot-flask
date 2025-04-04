@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="documents-container">
+    <h1>Documents</h1>
+
+    <div class="document-grid">
+        <!-- NDC Document -->
+        <div class="document-card">
+            <h2>Nationally Determined Contributions (NDCs) 2021</h2>
+            <p>Descriptions will be added later on</p>
+            <a href="{{ url_for('download_file', filename='NDC_submission_20210826revised.pdf') }}" class="download-button">
+                Download File
+            </a>
+        </div>
+
+        <!-- Mujib Climate Prosperity Plan -->
+        <div class="document-card">
+            <h2>Mujib Climate Prosperity Plan</h2>
+            <p>Descriptions will be added later on</p>
+            <a href="{{ url_for('download_file', filename='Mujib Climate Prosperity Plan 2022-2041.pdf') }}" class="download-button">
+                Download File
+            </a>
+        </div>
+
+        <!-- BDP Document -->
+        <div class="document-card">
+            <h2>BDP 2100 Abridged English Version</h2>
+            <p>Descriptions will be added later on</p>
+            <a href="{{ url_for('download_file', filename='BDP 2100 Abridged Version English.pdf') }}" class="download-button">
+                Download File
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

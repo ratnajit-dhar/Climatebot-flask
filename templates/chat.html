@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="loading-spinner" class="loading-spinner">
+    <p>Loading chat...</p>
+</div>
+
+<div id="chat-container" class="chat-container" style="display: none;">
+    <div id="chat-messages" class="chat-messages">
+        {% for message in messages %}
+        <div class="message {{ message.role }}">
+            <p>{{ message.content }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="chat-input-container">
+        <input type="text" id="user-input" placeholder="Type your message here...">
+        <button onclick="sendMessage()" id="send-button">Send</button>
+        <button onclick="clearChat()" id="clear-button">Clear Chat</button>
+    </div>
+</div>
+
+<style>
+    .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 1000;
+        font-size: 1.5em;
+        color: #555;
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const spinner = document.getElementById("loading-spinner");
+    const chatContainer = document.getElementById("chat-container");
+
+    // Simulate loading delay (replace with actual loading logic if needed)
+    fetch('/chat') // Ensure the backend is ready
+        .then(() => {
+            spinner.style.display = "none";
+            chatContainer.style.display = "block";
+        })
+        .catch(error => {
+            console.error('Error loading chat:', error);
+            spinner.innerHTML = '<p>Error loading chat. Please try again later.</p>';
+        });
+});
+
+function sendMessage() {
+    const input = document.getElementById('user-input');
+    const message = input.value.trim();
+    
+    if (message) {
+        input.value = '';
+        input.disabled = true;
+        document.getElementById('send-button').disabled = true;
+
+        fetch('/ask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ question: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const chatMessages = document.getElementById('chat-messages');
+            
+            // Add user message
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user';
+            userDiv.innerHTML = `<p>${message}</p>`;
+            chatMessages.appendChild(userDiv);
+            
+            // Add assistant response
+            const assistantDiv = document.createElement('div');
+            assistantDiv.className = 'message assistant';
+            assistantDiv.innerHTML = `<p>${data.response}</p>`;
+            chatMessages.appendChild(assistantDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while sending the message');
+        })
+        .finally(() => {
+            input.disabled = false;
+            document.getElementById('send-button').disabled = false;
+            input.focus();
+        });
+    }
+}
+
+function clearChat() {
+    fetch('/clear_chat', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML = `
+                <div class="message assistant">
+                    <p>Hello! I am ClimateBot, here to answer your questions. I am designed to help answer any question you may have based on the provided documents you will find in the 'Documents' section.</p>
+                </div>
+            `;
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Handle Enter key press
+document.getElementById('user-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+</script>
+{% endblock %}
